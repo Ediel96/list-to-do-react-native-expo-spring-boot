@@ -3,7 +3,8 @@ package crud.crud.models.entity;
 import lombok.Data;
 
 import javax.persistence.*;
-import java.sql.Date;
+import java.util.Date;
+//import java.sql.Date;
 
 @Data
 @Entity
@@ -14,7 +15,6 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-
     private String title;
 
     private String description;
@@ -22,6 +22,6 @@ public class Task {
     @Column(name = "beginning_date")
     private Date beginningDate;
 
-    @Column(name = "start_date")
-    private Date startDate;
+    @Column(name = "end_date")
+    private Date endDate;
 }
