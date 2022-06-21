@@ -1,5 +1,6 @@
 package crud.crud.controllers;
 
+import crud.crud.Constant.Constant;
 import crud.crud.models.entity.Task;
 import crud.crud.models.iservices.ITaskServices;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -7,6 +8,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,13 +39,13 @@ public class TaskController {
            task.setBeginningDate(date);
            taskNew = taskServices.save(task);
        }catch (DataAccessException e){
-           response.put("message" , "Error al realizar la  consulta en la base de datos");
-           response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+           response.put(Constant.TitleMessage, Constant.ErrorQuery);
+           response.put(Constant.TitleError, e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
            return new ResponseEntity<Map<String , Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
        }
 
-        response.put("message", "Sea credo la tarea en la base de datos");
-        response.put("task", taskNew);
+        response.put(Constant.TitleMessage, Constant.CreateTaskDescription);
+        response.put(Constant.TitleTask, taskNew);
         return new ResponseEntity<Map <String, Object> >(response, HttpStatus.CREATED);
     }
 
@@ -54,7 +56,7 @@ public class TaskController {
 
 
         if(taskExisting != null){
-            response.put("mensaje", "Error: no pudo editar, el task : " .concat(id.toString().concat(" no existe en la base de datos")));
+            response.put(Constant.TitleTask, "Error: no pudo editar, el task : " .concat(id.toString().concat(" no existe en la base de datos")));
             return new ResponseEntity<Map<String , Object>>(response, HttpStatus.NOT_FOUND);
         }
 
@@ -72,30 +74,30 @@ public class TaskController {
 
         }catch (DataAccessException e){
 
-            response.put("mensaje" , "Error al actualizar la base de datos");
-            response.put("error", e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
+            response.put(Constant.TitleMessage, Constant.ErrorQuery);
+            response.put(Constant.TitleError, e.getMessage().concat(" : ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity <Map <String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        response.put("mensaje", "El task ha sido actualizado con exito");
-        response.put("cliente", taskUpdate);
+        response.put(Constant.TitleMessage, Constant.UpdateTaskDescription);
+        response.put(Constant.TitleTask, taskUpdate);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
     @DeleteMapping("/task/{id}")
-    public ResponseEntity<?> edit( @PathVariable Long id) {
+    public ResponseEntity<?> delete( @PathVariable Long id) {
         Map<String, Object> response = new HashMap<>();
 
         try {
             Task task = taskServices.finById(id);
             taskServices.delete(id);
         }catch (DataAccessException e){
-            response.put("mensaje" , "Error al eliminar en la base de datos ");
-            response.put("error", e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
+            response.put(Constant.TitleMessage , Constant.ErrorQuery);
+            response.put(Constant.TitleError, e.getMessage().concat(": ").concat(e.getMostSpecificCause().getMessage()));
             return new ResponseEntity<Map<String , Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
         }
 
-        response.put("mensaje", "se eliminado correctamente el cliente");
+        response.put(Constant.TitleMessage, Constant.DeleteTaskDescription);
         return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
     }
 
