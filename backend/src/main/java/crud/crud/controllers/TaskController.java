@@ -23,11 +23,15 @@ public class TaskController {
     @Autowired
     private ITaskServices taskServices;
 
-
     @GetMapping("/tasks")
     public List<Task> index( ) { return taskServices.findAll(); };
 
-    @PostMapping("/task/{id}")
+    @GetMapping("/task/{id}")
+    public Task getTaskId (@PathVariable Long id){
+        return taskServices.finById(id);
+    }
+
+    @PostMapping("/task")
     public ResponseEntity<?> save(@RequestBody Task task){
         Map<String, Object> response = new HashMap<>();
         Task taskNew = null;
@@ -55,7 +59,7 @@ public class TaskController {
         Task taskExisting = taskServices.finById(id);
 
 
-        if(taskExisting != null){
+        if(taskExisting == null){
             response.put(Constant.TitleTask, "Error: no pudo editar, el task : " .concat(id.toString().concat(" no existe en la base de datos")));
             return new ResponseEntity<Map<String , Object>>(response, HttpStatus.NOT_FOUND);
         }
